@@ -2,6 +2,7 @@
 import traceback
 import time
 import requests
+import json
 
 from beaver.transports.base_transport import BaseTransport
 from beaver.transports.exception import TransportException
@@ -60,7 +61,18 @@ class HttpTransport(BaseTransport):
                 edata = jsonline.replace('\t', '\\t')
                 self._logger.debug('writing to : {0}'.format(self._url))
                 self._logger.debug('writing data: {0}'.format(edata))
-                r = requests.post(url=self._url, data=edata)
+                
+                try:
+                    isjson = json.loads(edata)
+                except ValueError:
+                    headers = {'content-type': 'application/x-www-form-urlencoded'}
+                else:
+                    headers = {'content-type': 'application/json'}
+                
+                r = requests.post(url=self._url, headers=headers, data=edata)
+                
+                self._logger.info('POST Status {0} - {1}'.format(r.status_code,headers))
+                
                 if r.status_code >= 200 and r.status_code < 300:
                     res = r.content
                 else:
