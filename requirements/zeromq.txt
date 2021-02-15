@@ -1,2 +1,2 @@
 -r base.txt
-pyzmq==2.1.11
+pyzmq==22.0.3
