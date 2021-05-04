@@ -5,4 +5,4 @@ nose
 six
 unittest2
 coveralls
-moto==0.4.31
+moto==2.0.6
